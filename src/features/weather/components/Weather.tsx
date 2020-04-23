@@ -14,8 +14,6 @@ const Weather: React.SFC = () => {
     }
   }, [data, dispatch])
 
-  console.log('data:', data, 'error:', error);
-
   if (error) {
     return (<div>Weather Error</div>);
   }
