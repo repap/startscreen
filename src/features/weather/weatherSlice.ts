@@ -1,54 +1,44 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../app/store';
-
-interface ApiResponse {
-  data: object | null,
-  error: object | null,
-}
+import { ApiResponse, createInitialApiResponseData, fetchApi } from '../../util/api';
 
 interface WeatherState {
-  weather: ApiResponse,
-}
+  data: ApiResponse,
+};
 
 const initialState: WeatherState = {
-  weather: {
-    data: null,
-    error: null,
-  },
+  data: createInitialApiResponseData(),
 };
 
 export const weatherSlice = createSlice({
   name: 'weather',
   initialState,
   reducers: {
-    addData: (state, action: PayloadAction<ApiResponse>) => {
-      state.weather = action.payload;
+    fetchSuccess: (state: WeatherState, action: PayloadAction<object>) => {
+      state.data.data = action.payload
+    },
+    fetchError: (state: WeatherState, action: PayloadAction<Error>) => {
+      state.data.error = action.payload
+    },
+    setLoading: (state: WeatherState, action: PayloadAction<boolean>) => {
+      state.data.loading = action.payload
     },
   }
 });
 
-// public
+// public actions
 // export const {} = weatherSlice.actions;
 
-// private
-const { addData } = weatherSlice.actions;
+// private actions
+const { fetchSuccess, fetchError, setLoading } = weatherSlice.actions;
 
 const getCityHelper = (city: string) => !!city ? `city=${city}` : ''
 
-export const loadWeatherData = (city: string = ''): AppThunk => async (dispatch) => {
-  const response: ApiResponse = await fetch(`/api/weather?${getCityHelper(city)}`)
-    .then(res => res.json())
-    .then( data => ({ error: null, data }))
-    .catch(err => {
-      console.error(err)
-      return { data: null, error: err };
-    });
+export const loadWeatherData = (city: string = ''): AppThunk => fetchApi(
+  `/api/weather?${getCityHelper(city)}`,
+  setLoading, fetchError, fetchSuccess,
+);
 
-  
-  dispatch(addData(response));
-};
-
-// TODO: add weather selector as soon as structure is defined
-export const getWeatherData = (state: RootState) => state.weather.weather;
+export const getWeatherData = (state: RootState) => state.weather.data;
 
 export default weatherSlice.reducer;

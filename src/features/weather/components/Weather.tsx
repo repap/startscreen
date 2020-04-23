@@ -6,13 +6,17 @@ import {
 
 const Weather: React.SFC = () => {
   const dispatch = useDispatch();
-  const { data, error } = useSelector(getWeatherData);
+  const { data, error, loading } = useSelector(getWeatherData);
 
   useEffect(() => {
     if (!data) {
       dispatch(loadWeatherData());
     }
   }, [data, dispatch])
+
+  if (loading) {
+    return (<div>Weather Loading</div>);
+  }
 
   if (error) {
     return (<div>Weather Error</div>);
@@ -22,7 +26,7 @@ const Weather: React.SFC = () => {
     return (<div>Weather with Data</div>);
   }
   
-  return (<div>Weather without Data</div>)
+  return null;
 }
 
 export default Weather;
