@@ -15,15 +15,28 @@ const Weather: React.SFC = () => {
   }, [data, dispatch])
 
   if (loading) {
-    return (<div>Weather Loading</div>);
+    return (<h2>Weather Loading</h2>);
   }
 
   if (error) {
-    return (<div>Weather Error</div>);
+    return (<h2>Weather Error</h2>);
   }
   
   if (data) {
-    return (<div>Weather with Data</div>);
+    return (
+      <div>
+        <h2>Weather with Data</h2>
+        <ul>
+          <li>city: {data.city}</li>
+          <li>description: {data.description}</li>
+          <li>id: {data.id}</li>
+          <li>temp: {data.temp}</li>
+          <li>tempMax: {data.tempMax}</li>
+          <li>tempMin: {data.tempMin}</li>
+          <li>updated: {new Date(data.updated).toLocaleString()}</li>
+        </ul>
+      </div>
+    );
   }
   
   return null;

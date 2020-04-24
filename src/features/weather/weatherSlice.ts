@@ -3,25 +3,39 @@ import { AppThunk, RootState } from '../../app/store';
 import { ApiResponse, createInitialApiResponseData, fetchApi } from '../../util/api';
 
 interface WeatherState {
-  data: ApiResponse,
+  apiData: WeatherApiResponse,
+};
+
+interface WeatherData {
+  updated: number,
+  id: string,
+  description: string,
+  temp: number,
+  tempMin: number,
+  tempMax: number,
+  city: string,
+};
+
+interface WeatherApiResponse extends ApiResponse {
+  data: WeatherData | null,
 };
 
 const initialState: WeatherState = {
-  data: createInitialApiResponseData(),
+  apiData: createInitialApiResponseData(),
 };
 
 export const weatherSlice = createSlice({
   name: 'weather',
   initialState,
   reducers: {
-    fetchSuccess: (state: WeatherState, action: PayloadAction<object>) => {
-      state.data.data = action.payload
+    fetchSuccess: (state: WeatherState, action: PayloadAction<WeatherData>) => {
+      state.apiData.data = action.payload
     },
     fetchError: (state: WeatherState, action: PayloadAction<Error>) => {
-      state.data.error = action.payload
+      state.apiData.error = action.payload
     },
     setLoading: (state: WeatherState, action: PayloadAction<boolean>) => {
-      state.data.loading = action.payload
+      state.apiData.loading = action.payload
     },
   }
 });
@@ -39,6 +53,6 @@ export const loadWeatherData = (city: string = ''): AppThunk => fetchApi(
   setLoading, fetchError, fetchSuccess,
 );
 
-export const getWeatherData = (state: RootState) => state.weather.data;
+export const getWeatherData = (state: RootState) => state.weather.apiData;
 
 export default weatherSlice.reducer;
