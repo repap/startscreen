@@ -25,7 +25,8 @@ main.temp_max       ->  Maximum temperature at the moment.
 
 // TODO: Add error handling
 export default async (req: any, res: any) => {
-  const { city = 'moscow', country = 'ru' } = req.query
+  console.log(req.query);
+  const { city = 'moscow', country = '' } = req.query
   const { data } = await fetchWeatherData(city, country);
   // res.send(data);
   res.json({

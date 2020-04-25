@@ -49,13 +49,13 @@ const { fetchSuccess, fetchError, setLoading } = weatherSlice.actions;
 const getCityHelper = (
   city: string, country: string
 ): string => (
-    !!city ? `city=${city},${country}` : ''
+    !!city ? `city=${city}&country=${country}` : ''
 );
 
 export const loadWeatherData = (
   city: string = '', country: string= ''
 ): AppThunk => fetchApi(
-  `/api/_weather?${getCityHelper(city, country)}`,
+  `/api/weather?${getCityHelper(city, country)}`,
   setLoading, fetchError, fetchSuccess,
 );
 
