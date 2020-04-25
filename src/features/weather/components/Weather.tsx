@@ -1,41 +1,16 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import {
-  loadWeatherData, getWeatherData,
-} from '../weatherSlice';
+import React from 'react';
 import WeatherIcon from './WeatherIcon';
+import { WeatherApiResponse } from '../../../../api/types/weatherTypes';
+import withWeatherData from './withWeatherApi';
 
-const Weather: React.SFC = () => {
-  const dispatch = useDispatch();
-  const { data, error, loading } = useSelector(getWeatherData);
+const Weather: React.FC<WeatherApiResponse> = ({
+  type, city, temp,
+}) => (
+  <div>
+    <h2 style={{ marginBottom: 0 }}>
+      {city}, {temp}° <WeatherIcon type={type} />
+    </h2>
+  </div>
+);
 
-  useEffect(() => {
-    if (!data) {
-      dispatch(loadWeatherData('bremen'));
-    }
-  }, [data, dispatch])
-
-  if (loading) {
-    return (<h2>Weather Loading</h2>);
-  }
-
-  if (error) {
-    return (<h2>Weather Error</h2>);
-  }
-  
-  if (data) {
-    return (
-      <div>
-        <h2>
-          {data.city}, {data.temp}° <WeatherIcon type={data.type} />
-        </h2>
-        (min: {data.tempMin}° / max: {data.tempMax}°)
-      </div>
-    );
-  }
-  
-  return null;
-}
-
-export default Weather;
+export default withWeatherData(Weather);

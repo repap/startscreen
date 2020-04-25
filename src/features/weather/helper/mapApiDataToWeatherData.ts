@@ -1,5 +1,6 @@
-import { WeatherApiResponse } from '../weatherSlice';
-export default (data: WeatherApiResponse): WeatherApiResponse => ({
+import { WeatherApiResponse } from '../../../../api/types/weatherTypes';
+
+export default (data: any): WeatherApiResponse => ({
   updated: data.updated,
   type: data.type,
   description: data.description,

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import mapWeatherIdToWeatherType from './helper/mapWeatherIdToWeatherType';
+import { WeatherApiResponse, WeatherErrorResponse } from './types/weatherTypes';
 
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
@@ -22,19 +23,31 @@ main.temp_max       ->  Maximum temperature at the moment.
                         geographically expanded (use these parameter optionally). 
                         Unit Default: Kelvin, Metric: Celsius, Imperial: Fahrenheit.
 */
+const createWeatherType = (data: any): WeatherApiResponse => ({
+  updated: new Date(data.dt * 1000).toUTCString(),
+  type: mapWeatherIdToWeatherType(data.weather.length ? data.weather[0].id : null),
+  description: data.weather.length ? data.weather[0].description : '',
+  temp: data.main.temp,
+  tempMin: data.main.temp_min,
+  tempMax: data.main.temp_max,
+  city: data.name,
+})
 
+const createError = (error: any): WeatherErrorResponse => ({
+  message: error.message,
+  name: error.name,
+  data: error.response.data,
+  status: error.response.status,
+  statusText: error.response.statusText,
+})
 
 // TODO: Add error handling
 export default async (req: any, res: any) => {
-  const { city = 'moscow', country = '' } = req.query
-  const { data } = await fetchWeatherData(city, country);
-  res.json({
-    updated: data.dt * 1000,
-    type: mapWeatherIdToWeatherType(data.weather.length ? data.weather[0].id : null),
-    description: data.weather.length ? data.weather[0].description : '',
-    temp: data.main.temp,
-    tempMin: data.main.temp_min,
-    tempMax: data.main.temp_max,
-    city: data.name,
-  });
+  const { city = '', country = '' } = req.query
+  try {
+    const { data } = await fetchWeatherData(city, country);
+    res.json({ data: createWeatherType(data) });
+  } catch(error) {
+    res.json({ error: createError(error) })
+  }
 }

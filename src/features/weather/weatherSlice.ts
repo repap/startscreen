@@ -2,20 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../app/store';
 import { ApiResponse, createInitialApiResponseData, fetchApi } from '../../util/api';
 import mapApiDataToWeatherData from './helper/mapApiDataToWeatherData';
-import { WeatherType } from '../../../api/types/weatherTypes';
+import { WeatherApiResponse } from '../../../api/types/weatherTypes';
 
-export type WeatherApiResponse = {
-  updated: Date,
-  type: WeatherType,
-  description: string,
-  temp: number,
-  tempMin: number,
-  tempMax: number,
-  city: string,
+export interface WeatherData extends ApiResponse {
+  data: WeatherApiResponse | null,
 };
 
-interface WeatherData extends ApiResponse {
-  data: WeatherApiResponse | null,
+export type LoadWeatherDataOptions = {
+  city?: string,
+  country?: string,
 };
 
 type WeatherState = {
@@ -48,16 +43,12 @@ export const weatherSlice = createSlice({
 // private actions
 const { fetchSuccess, fetchError, setLoading } = weatherSlice.actions;
 
-const getCityHelper = (
-  city: string, country: string
-): string => (
-    !!city ? `city=${city}&country=${country}` : ''
+const getCityHelper = (options: LoadWeatherDataOptions): string => (
+    !!options.city ? `city=${options.city}&country=${options.country}` : ''
 );
 
-export const loadWeatherData = (
-  city: string = '', country: string= ''
-): AppThunk => fetchApi(
-  `/api/weather?${getCityHelper(city, country)}`,
+export const loadWeatherData = (options: LoadWeatherDataOptions): AppThunk => fetchApi(
+  `/api/weather?${getCityHelper(options)}`,
   setLoading, fetchError, fetchSuccess,
 );
 
