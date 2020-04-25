@@ -10,7 +10,7 @@ const Weather: React.SFC = () => {
 
   useEffect(() => {
     if (!data) {
-      dispatch(loadWeatherData());
+      dispatch(loadWeatherData('bremen'));
     }
   }, [data, dispatch])
 

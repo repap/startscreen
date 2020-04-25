@@ -22,9 +22,6 @@ export const fetchApi = (
     .then(res => res.json())
     .then(data => dispatch(successDispatcher(data)))
     .catch((err: Error) => dispatch(errorDispatcher(err)))
-    .then(console.error);
   
   dispatch(loadingDispatcher(false));
 }
-
-export const getApiRoute = (path: string) => `/api/${path}`;
