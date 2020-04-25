@@ -30,8 +30,8 @@ export default async (req: any, res: any) => {
   // res.send(data);
   res.json({
     updated: data.dt * 1000,
-    id: data.weather[0].id,
-    description: data.weather[0].description,
+    id: data.weather.length ? data.weather[0].id : '',
+    description: data.weather.length ? data.weather[0].description : '',
     temp: data.main.temp,
     tempMin: data.main.temp_min,
     tempMax: data.main.temp_max,

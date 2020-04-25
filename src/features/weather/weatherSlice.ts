@@ -31,8 +31,8 @@ export const weatherSlice = createSlice({
     fetchSuccess: (state: WeatherState, action: PayloadAction<WeatherData>) => {
       state.apiData.data = action.payload
     },
-    fetchError: (state: WeatherState, action: PayloadAction<Error>) => {
-      state.apiData.error = action.payload
+    fetchError: (state: WeatherState, action: PayloadAction<any>) => {
+      state.apiData.error = { ...action.payload }
     },
     setLoading: (state: WeatherState, action: PayloadAction<boolean>) => {
       state.apiData.loading = action.payload
@@ -55,7 +55,7 @@ const getCityHelper = (
 export const loadWeatherData = (
   city: string = '', country: string= ''
 ): AppThunk => fetchApi(
-  `/api/weather?${getCityHelper(city, country)}`,
+  `/api/_weather?${getCityHelper(city, country)}`,
   setLoading, fetchError, fetchSuccess,
 );
 

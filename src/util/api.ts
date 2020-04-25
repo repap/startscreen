@@ -1,6 +1,9 @@
+import axios from 'axios';
+import { serializeError } from 'serialize-error';
+
 export interface ApiResponse {
   data: any,
-  error: Error | null,
+  error: any,
   loading: boolean,
 };
 
@@ -17,11 +20,11 @@ export const fetchApi = (
   successDispatcher: Function,
 ) => async (dispatch: Function) => {
   dispatch(loadingDispatcher(true));
-  
-  await fetch(path)
-    .then(res => res.json())
-    .then(data => dispatch(successDispatcher(data)))
-    .catch((err: Error) => dispatch(errorDispatcher(err)))
-  
+  try {
+    const { data } = await axios.get(path);
+    dispatch(successDispatcher(data))
+  } catch (err) {
+    dispatch(errorDispatcher(serializeError(err)))
+  }
   dispatch(loadingDispatcher(false));
 }
