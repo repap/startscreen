@@ -1,7 +1,7 @@
-import {WeatherData} from '../weatherSlice';
-export default (data: WeatherData):WeatherData => ({
+import { WeatherApiResponse } from '../weatherSlice';
+export default (data: WeatherApiResponse): WeatherApiResponse => ({
   updated: data.updated,
-  id: data.id,
+  type: data.type,
   description: data.description,
   temp: Math.round(data.temp),
   tempMin: Math.round(data.tempMin),

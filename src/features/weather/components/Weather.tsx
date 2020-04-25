@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun } from '@fortawesome/free-solid-svg-icons';
 
 import {
   loadWeatherData, getWeatherData,
 } from '../weatherSlice';
+import WeatherIcon from './WeatherIcon';
 
 const Weather: React.SFC = () => {
   const dispatch = useDispatch();
@@ -29,7 +28,7 @@ const Weather: React.SFC = () => {
     return (
       <div>
         <h2>
-          {data.city}, {data.temp}° <FontAwesomeIcon icon={faSun} />
+          {data.city}, {data.temp}° <WeatherIcon type={data.type} />
         </h2>
         (min: {data.tempMin}° / max: {data.tempMax}°)
       </div>

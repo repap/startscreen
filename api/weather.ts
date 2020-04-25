@@ -1,4 +1,5 @@
 import axios from 'axios';
+import mapWeatherIdToWeatherType from './helper/mapWeatherIdToWeatherType';
 
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
@@ -27,10 +28,9 @@ main.temp_max       ->  Maximum temperature at the moment.
 export default async (req: any, res: any) => {
   const { city = 'moscow', country = '' } = req.query
   const { data } = await fetchWeatherData(city, country);
-  // res.send(data);
   res.json({
     updated: data.dt * 1000,
-    id: data.weather.length ? data.weather[0].id : '',
+    type: mapWeatherIdToWeatherType(data.weather.length ? data.weather[0].id : null),
     description: data.weather.length ? data.weather[0].description : '',
     temp: data.main.temp,
     tempMin: data.main.temp_min,
