@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../app/store';
-import { ApiResponse, createInitialApiResponseData, fetchApi } from '../../util/api';
+import { ApiResponse, createInitialApiResponseData, fetchApi, getApiRoute } from '../../util/api';
 
 interface WeatherState {
   apiData: WeatherApiResponse,
@@ -49,7 +49,7 @@ const { fetchSuccess, fetchError, setLoading } = weatherSlice.actions;
 const getCityHelper = (city: string) => !!city ? `city=${city}` : ''
 
 export const loadWeatherData = (city: string = ''): AppThunk => fetchApi(
-  `/api/weather?${getCityHelper(city)}`,
+  getApiRoute(`weather?${getCityHelper(city)}`),
   setLoading, fetchError, fetchSuccess,
 );
 
