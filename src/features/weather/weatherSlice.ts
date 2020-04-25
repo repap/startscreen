@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../app/store';
 import { ApiResponse, createInitialApiResponseData, fetchApi } from '../../util/api';
+import roundTempValues from './helper/roundTempValues';
 
 interface WeatherState {
   apiData: WeatherApiResponse,
 };
 
-interface WeatherData {
+export interface WeatherData {
   updated: number,
   id: string,
   description: string,
@@ -29,7 +30,7 @@ export const weatherSlice = createSlice({
   initialState,
   reducers: {
     fetchSuccess: (state: WeatherState, action: PayloadAction<WeatherData>) => {
-      state.apiData.data = action.payload
+      state.apiData.data = roundTempValues(action.payload)
     },
     fetchError: (state: WeatherState, action: PayloadAction<any>) => {
       state.apiData.error = { ...action.payload }
